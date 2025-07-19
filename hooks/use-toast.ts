@@ -1,5 +1,4 @@
 "use client"
-
 // Inspired by react-hot-toast library
 import * as React from "react"
 
@@ -17,7 +16,6 @@ type ToasterToast = ToastProps & {
   description?: React.ReactNode
   action?: ToastActionElement
 }
-
 const actionTypes = {
   ADD_TOAST: "ADD_TOAST",
   UPDATE_TOAST: "UPDATE_TOAST",
@@ -31,10 +29,9 @@ function genId() {
   count = (count + 1) % Number.MAX_SAFE_INTEGER
   return count.toString()
 }
-
 type ActionType = typeof actionTypes
 
-type Action =
+type Action +
   | {
       type: ActionType["ADD_TOAST"]
       toast: ToasterToast
