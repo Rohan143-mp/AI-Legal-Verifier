@@ -51,7 +51,6 @@ AI-Legal-Verifier/
 git clone https://github.com/vira250/AI-Legal-Verifier.git
 cd AI-Legal-Verifier
 ```
-
 ### 2. Create .env.local
 # .env.local
 ```bash
