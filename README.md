@@ -89,7 +89,6 @@ Legal Education Platforms
   <img src="Screenshots/content_page2.jpg" width="30%" />
   <img src="Screenshots/content_page3.jpg" width="30%" />
 </p>
-
 ## 🛠 Future Improvements
 
 PDF/Document Upload & Parsing
