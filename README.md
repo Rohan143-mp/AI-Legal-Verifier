@@ -1,6 +1,7 @@
 # ⚖️ AI Legal Verifier
 
 An AI-powered system that verifies legal content by matching it with authentic Indian laws, Bare Acts, constitutional provisions, and judgments. This tool helps users validate AI-generated or human-drafted legal content with real legal sources, ensuring **transparency**, **jurisdictional accuracy**, and **legal authenticity**.
+
 ---
 
 ## 🚀 Features
