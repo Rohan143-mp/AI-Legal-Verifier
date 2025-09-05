@@ -77,6 +77,7 @@ Legal AI Tool Builders
 
 Legal Education Platforms
 
+
 ## 📸 Screenshots
 
 <p align="center">
