@@ -13,6 +13,7 @@ An AI-powered system that verifies legal content by matching it with authentic I
 - 🧠 Uses OpenAI / Groq APIs for language understanding
 - 🌐 Pixel-themed React-based UI
 
+
 ---
 
 ## 🧱 Tech Stack
