@@ -61,6 +61,7 @@ export default function LegalVerifier() {
   const [showAnimations, setShowAnimations] = useState(false)
   const [showInputSection, setShowInputSection] = useState(false)
   const [inputCentered, setInputCentered] = useState(true)
+  const [view, setView] = useState<"landing" | "input">("landing")
   const [analysisLoading, setAnalysisLoading] = useState(false)
 
   // Feedback state
@@ -75,7 +76,13 @@ export default function LegalVerifier() {
   })
 
   const handleStartVerification = () => {
+    setView("input")
     setShowInputSection(true)
+    setInputCentered(true)
+    setShowAnimations(false)
+    setResult(null)
+    setShowFeedback(false)
+    setFeedbackSubmitted(false)
   }
 
   const handleVerification = async () => {
@@ -119,6 +126,8 @@ export default function LegalVerifier() {
       // Set new results and trigger animations
       setResult(data)
       setShowFeedback(true)
+      setView("input")
+      setShowInputSection(true)
 
       // Reset and trigger animations
       setShowAnimations(false)
@@ -219,7 +228,7 @@ export default function LegalVerifier() {
         </div>
 
         {/* Initial Landing Section - Only show when no input section is visible */}
-        {!showInputSection && (
+        {view === "landing" && (
           <div className="text-center py-16 mx-auto">
             <div className="relative w-48 h-48 mx-auto mb-8">
               <div className="absolute inset-0 border-4 border-cyan-400/30 rounded-full"></div>
@@ -295,7 +304,12 @@ export default function LegalVerifier() {
 
             {/* Start Button */}
             <Button
-              onClick={handleStartVerification}
+              type="button"
+              onClick={(event) => {
+                event.preventDefault()
+                event.stopPropagation()
+                handleStartVerification()
+              }}
               className="h-16 px-12 bg-gradient-to-r from-orange-500 to-green-500 hover:from-orange-600 hover:to-green-600 text-white pixel-font-2xl font-bold pixel-button"
             >
               <Plus className="h-6 w-6 mr-3" />
@@ -307,7 +321,7 @@ export default function LegalVerifier() {
         )}
 
         {/* Input and Results Section - Dynamic Layout */}
-        {showInputSection && (
+        {view === "input" && (
           <div
             className={`transition-all duration-500 ease-in-out ${
               inputCentered ? "flex justify-center" : "grid lg:grid-cols-2 gap-4 items-start"
@@ -455,7 +469,12 @@ export default function LegalVerifier() {
                   </div>
 
                   <Button
-                    onClick={handleVerification}
+                    type="button"
+                    onClick={(event) => {
+                      event.preventDefault()
+                      event.stopPropagation()
+                      handleVerification()
+                    }}
                     disabled={loading || !query.trim()}
                     className="w-full h-12 bg-gradient-to-r from-orange-500 to-green-500 hover:from-orange-600 hover:to-green-600 text-white pixel-font-lg font-bold pixel-button"
                   >

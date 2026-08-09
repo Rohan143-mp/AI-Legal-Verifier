@@ -23,30 +23,43 @@ async function runLLM({
   systemPrompt: string
   userPrompt: string
 }) {
-  try {
-    // ❶ Primary attempt – OpenAI
-    return await generateText({
-      model: openai("gpt-4o"),
-      system: systemPrompt,
-      prompt: userPrompt,
-    })
-  } catch (err: any) {
-    const message = String(err?.message || "")
-    const isQuota = message.includes("quota") || message.includes("Rate limit") || err?.status === 429
+  const hasOpenAI = Boolean(process.env.OPENAI_API_KEY)
+  const hasGroq = Boolean(process.env.GROQ_API_KEY)
 
-    // ❷ If quota error & Groq key exists, retry with Groq
-    if (isQuota && process.env.GROQ_API_KEY) {
-      console.warn("OpenAI quota exceeded – retrying with Groq")
+  if (hasOpenAI) {
+    try {
       return await generateText({
-        model: groq("llama3-70b-8192"), // fast, quality model
+        model: openai("gpt-4o"),
         system: systemPrompt,
         prompt: userPrompt,
       })
-    }
+    } catch (err: any) {
+      const message = String(err?.message || "")
+      const isQuota = message.includes("quota") || message.includes("Rate limit") || err?.status === 429
 
-    // ❸ Re-throw for outer catch block
-    throw err
+      if (isQuota && hasGroq) {
+        console.warn("OpenAI quota exceeded – retrying with Groq")
+        return await generateText({
+          model: groq("llama-3.3-70b-versatile"),
+          system: systemPrompt,
+          prompt: userPrompt,
+        })
+      }
+
+      throw err
+    }
   }
+
+  if (hasGroq) {
+    console.warn("OpenAI key not found – using Groq")
+    return await generateText({
+      model: groq("llama-3.3-70b-versatile"),
+      system: systemPrompt,
+      prompt: userPrompt,
+    })
+  }
+
+  throw new Error("No AI provider API key configured. Set OPENAI_API_KEY or GROQ_API_KEY.")
 }
 
 function generateAnalysisId(): string {
@@ -86,10 +99,9 @@ function getFeedbackAdjustment(content: string): { confidenceAdjustment: number;
 }
 
 export async function POST(request: NextRequest) {
-  // Ensure the OpenAI key exists before making any request
-  if (!process.env.OPENAI_API_KEY) {
+  if (!process.env.OPENAI_API_KEY && !process.env.GROQ_API_KEY) {
     return NextResponse.json(
-      { error: "OpenAI API key is missing. Please set OPENAI_API_KEY in your project settings." },
+      { error: "No AI provider API key is configured. Please set OPENAI_API_KEY or GROQ_API_KEY in your project settings." },
       { status: 500 },
     )
   }
