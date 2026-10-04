@@ -42,7 +42,6 @@ AI-Legal-Verifier/
 ├── package.json # Project metadata
 └── README.md # Documentation
 
-```
 ---
 
 ## ⚙️ How to Run Locally
